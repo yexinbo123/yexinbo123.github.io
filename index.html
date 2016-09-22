@@ -2,9 +2,1006 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>弟弟生日快乐！</title>
+    <title>2048</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+        .header{
+            height: 100px;
+            line-height: 100px;
+            font-size: 36px;
+            font-family: "Microsoft Yahei";
+            text-align: center;
+            margin-top: 30px;
+        }
+        .box{
+            width: 440px;
+            height: 440px;
+            border-radius: 10px;
+            padding: 5px;
+            background: #b8af9e;
+            margin: 0 auto 50px;
+            position: relative;
+        }
+        .box ul{
+            float: left;
+        }
+        .box ul li{
+            float: left;
+            position: relative;
+            width: 100px;
+            height: 100px;
+            background: #ccc0b2;
+            color: #fff;
+            font-size: 40pt;
+            font-weight: bold;
+            font-family:"Microsoft Yahei" ;
+            margin: 5px;
+            line-height: 100px;
+            text-align: center;
+        }
+        .box ul li b{
+            position: absolute;
+            display: block;
+            width: 100px;
+            height: 100px;
+        }
+        .box ul li p{
+            width: 100px;
+            height: 100px;
+        }
+        /*移动动画*/
+        .move1xl{
+            transform: translateX(-110px);
+            transition-duration: 0.1s;
+        }
+        .move2xl{
+            transform: translateX(-220px);
+            transition-duration: 0.1s;
+        }
+        .move3xl{
+            transform: translateX(-330px);
+            transition-duration:0.1s;
+        }
+        .move1xr{
+            transform: translateX(110px);
+            transition-duration: 0.1s;
+        }
+        .move2xr{
+            transform: translateX(220px);
+            transition-duration: 0.1s;
+        }
+        .move3xr{
+            transform: translateX(330px);
+            transition-duration:0.1s;
+        }
+        .move1xu{
+            transform: translateY(-110px);
+            transition-duration: 0.1s;
+        }
+        .move2xu{
+            transform: translateY(-220px);
+            transition-duration: 0.1s;
+        }
+        .move3xu{
+            transform: translateY(-330px);
+            transition-duration:0.1s;
+        }
+        .move1xd{
+            transform: translateY(110px);
+            transition-duration: 0.1s;
+        }
+        .move2xd{
+            transform: translateY(220px);
+            transition-duration: 0.1s;
+        }
+        .move3xd{
+            transform: translateY(330px);
+            transition-duration:0.1s;
+        }
+        /*放大动画*/
+        .hfd{
+            animation: hfd 0.1s linear;
+        }
+        @keyframes hfd {
+            from{transform: scale(1,1)}
+            50%{transform: scale(1.2,1.2)}
+            to{transform: scale(1,1)}
+        }
+        /*配色*/
+        .normal_b{
+            opacity: 0;
+        }
+        .normal{
+            background: #ccc0b2;
+            color: #fff;
+        }
+        .n_2{
+            background: #EEE4DA;
+            color: #7C736A;
+        }
+        .n_2fd{
+            background: #EEE4DA;
+            color: #7C736A;
+            animation: fd 0.1s linear;
+        }
+        @keyframes fd {
+            from{transform: scale(0.1,0.1)}
+            to{transform: scale(1,1)}
+        }
+        .n_4{
+            background: #ECE0C8;
+            color: #7C736A;
+        }
+        .n_4fd{
+            background: #ECE0C8;
+            color: #7C736A;
+            animation: fd 0.1s linear;
+        }
+        .n_8{
+            background: #ecaa73;
+            color: #ffffff;
+        }
+        .n_16{
+            background: #ec8261;
+            color: #ffffff;
+        }
+        .n_32{
+            background: #ec4e3f;
+            color: #ffffff;
+        }
+        .n_64{
+            background: #ec0300;
+            color: #ffffff;
+        }
+        .n_128{
+            background: #ec5f00;
+            color: #ffffff;
+        }
+        .n_256{
+            background: #eca100;
+            color: #ffffff;
+        }
+        .n_512{
+            background: #ecdf00;
+            color: #ffffff;
+        }
+        .n_1024{
+            background: #ec007f;
+            color: #ffffff;
+            font-size: 28pt;
+        }
+        .n_2048{
+            background: #ec00e2;
+            color: #ffffff;
+            font-size: 28pt;
+        }
+        .final{
+            display: none;
+            position: absolute;
+            width: 440px;
+            height: 440px;
+            line-height: 220px;
+            text-align: center;
+            font-size: 50pt;
+            font-weight: bold;
+            font-family:"Microsoft Yahei" ;
+            border-radius: 10px;
+            padding: 5px;
+            top: 0;
+            left: 0;
+        }
+        .f_text{
+            height: 220px;
+            color: #d0eaff;
+        }
+        .f_bt{
+            height: 220px;
+            line-height: 50px;
+        }
+        .final p{
+            display: block;
+            width: 150px;
+            font-size: 25pt;
+            text-decoration: none;
+            color: #ffffff;
+            margin: 0 auto 25px;
+            padding: 10px;
+            border-radius: 10px;
+            background: #3f94ff;
+            opacity:0.8;
+            cursor: pointer;
+        }
+        .final p:hover{
+            background: #ff5896;
+        }
+        .zz{
+            position: absolute;
+            background: #64524d;
+            width: 440px;
+            height: 440px;
+            opacity: 0;
+            padding: 5px;
+            border-radius: 10px;
+            top: 0;
+            left: 0;
+        }
+        .cx{
+            animation: cx 0.1s linear;
+            animation-fill-mode:forwards ;
+        }
+        @keyframes cx {
+            from{opacity:0;transform: scale(0.1,0.1)}
+            to{opacity:0.5;transform: scale(1,1)}
+        }
+        .cx1{
+            animation: cx1 0.1s linear;
+            animation-fill-mode:forwards ;
+        }
+        @keyframes cx1 {
+            from{opacity:0;transform: scale(0.1,0.1)}
+            to{opacity:1;transform: scale(1,1)}
+        }
+        #obt{
+            width: 450px;
+            height: 200px;
+            margin: 0 auto;
+        }
+        #obt b{
+            display: block;
+            border-radius: 10px;
+            text-align: center;
+            line-height: 50px;
+            font-size: 20px;
+            width: 100px;
+            height: 50px;
+            cursor: pointer;
+            margin: 0 auto;
+            background: #ff8508;
+            color: #fff;
+        }
+        b:hover{
+            background: #00CCFF;
+        }
+        .footer{
+            height: 100px;
+            line-height: 100px;
+            font-family: "Microsoft Yahei";
+            text-align: center;
+        }
+        .footer a{
+            text-decoration: none;
+        }
+    </style>
+    <script>
+        window.onload=function () {
+            var row=document.getElementsByTagName("ul");
+            var sum=[];
+            var psn=[];
+            var move=[];
+            var sum_col=[];
+            var psn_col=[];
+            var sum_old=[];
+            var move_col=[];
+            var u=0;//判断是否有移动
+            document.getElementById("again").onclick=start;
+            document.getElementById("go").onclick=start;
+            //开始游戏并创建数组
+            function start() {
+                for(var i=0;i<4;i++){
+                    sum[i]=new Array;
+                    psn[i]=new Array;
+                    move[i]=new Array;
+                    sum_old[i]=new Array;
+                    for(var j=0;j<4;j++){
+                        sum[i][j]="";
+                        psn[i][j]=0;
+                        move[i][j]=0;
+                        sum_old[i][j]="";
+                    }
+                }
+                document.getElementsByClassName("zz")[0].className="zz";
+                document.getElementsByClassName("final")[0].className="final";
+                document.getElementsByClassName("final")[0].style.display="none";
+                ps(sum);
+                bps_b(sum);
+                sj(sum);
+                sj(sum);
+                insert_arr();
+            }
+            //p插入页面
+            function insert_arr() {
+                for(var i=0;i<4;i++){
+                    for(var j=0;j<4;j++){
+                        row[i].getElementsByTagName("p")[j].innerHTML=sum[i][j];
+                    }
+                }
+            }
+            //b插入页面
+            function insert_arrb() {
+                for(var i=0;i<4;i++){
+                    for(var j=0;j<4;j++){
+                        row[i].getElementsByTagName("b")[j].innerHTML=sum[i][j];
+                    }
+                }
+            }
+            //清空p页面
+            function remove_p() {
+                for(var i=0;i<4;i++){
+                    for(var j=0;j<4;j++){
+                        row[i].getElementsByTagName("p")[j].innerHTML="";
+                    }
+                }
+            }
+            //判断是否游戏结束
+            function finish(arr) {
+                for(var i=0;i<4;i++){
+                    for(var j=0;j<4;j++){
+                        if(arr[i][j]==0){
+                            return;
+                        }
+                        else {
+                            while(i<3&&j<3){
+                                if(arr[i][j]==arr[i+1][j]||arr[i][j]==arr[i][j+1]){
+                                    return;
+                                }
+                                else{
+                                    break;
+                                }
+                            }
+                            while (i==4&&j<3){
+                                if(arr[i][j]==arr[i][j+1]){
+                                    return;
+                                }
+                                else{
+                                    break;
+                                }
+                            }
+                            while (i<3&&j==3){
+                                if(arr[i][j]==arr[i+1][j]){
+                                    return;
+                                }
+                                else{
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                document.getElementsByClassName("zz")[0].className+=" cx";
+                document.getElementsByClassName("final")[0].className+=" cx1";
+                document.getElementsByClassName("final")[0].style.display="block";
+                return true;
+            }
+            //重置PSN数组
+            function reset_psn() {
+                for(var i=0;i<4;i++){
+                    for(var j=0;j<4;j++){
+                        psn[i][j]=0;
+                    }
+                }
+            }
+            //重置MOVE数组
+            function reset_move() {
+                for(var i=0;i<4;i++){
+                    for(var j=0;j<4;j++){
+                        move[i][j]=0;
+                        sum_old[i][j]=sum[i][j];
+                    }
+                }
+            }
+            //将矩阵倒转 即其他方向的都转为同一方向的数组 修改完后转回原数组插入页面
+            function sum_cx() {
+                for(var i=0;i<4;i++){
+                    sum_col[i]=new Array;
+                    psn_col[i]=new Array;
+                    move_col[i]=new Array;
+                    for(var j=0;j<4;j++){
+                        sum_col[i][j]=sum[j][i];
+                        psn_col[i][j]=0;
+                        move_col[i][j]=0;
+                    }
+                }
+            }
+            //将矩阵倒回来
+            function sum_cy() {
+                for(var i=0;i<4;i++){
+                    for(var j=0;j<4;j++){
+                        sum[i][j]=sum_col[j][i];
+                        psn[i][j]=psn_col[j][i];
+                        move[i][j]=move_col[j][i];
+                    }
+                }
+            }
+            //玩家操作后合并修改数组排列
+            function all(arr,k) {
+                for(var i=0;i<4;i++){
+                    for(var j=i;j<4;j++){
+                        if(arr[k][i]==""&&arr[k][j]!=""){
+                            u=1;
+                        }
+                    }
+                }
+            }
+            //正向
+            function go_x(arr,arr2,arr3) {
+                reset_psn();
+                for(var i=0;i<4;i++){
+                    all(arr,i);
+                    for(var l=0;l<4;l++){
+                        if(arr[i][l]==0){
+                            for(var m=l+1;m<4;m++){
+                                arr3[i][m]+=1;
+                            }
+                        }
+                        else{
+                            for(var h=l+1;h<4;h++){
+                                if(arr[i][h]!=0){
+                                    if(arr[i][l]==arr[i][h]){
+                                        for(var q=h;q<4;q++){
+                                            arr3[i][q]+=1;
+                                        }
+                                    }
+                                    else{
+                                        h=3;
+                                    }
+                                }
+                                else{
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    for(var n=0;n<4;n++){
+                        var t=0;
+                        while(arr[i][n]==""&&t<=4){
+                            arr[i].splice(n,1);
+                            arr[i].splice(3,0,"");
+                            t++;
+                        }
+                    }
+                    for(var j=0;j<3;j++){
+                        if(arr[i][j]==arr[i][j+1]&&arr[i][j]!=""){
+                            arr[i].splice(j,2,2*arr[i][j]);
+                            arr2[i][j]=1;
+                            arr[i].splice(3,0,"");
+                            u=1;//方块移动则为1
+                        }
+                    }
+                }
+            }
+            //反向
+            function go_y(arr,arr2,arr3) {
+                reset_psn();
+                for(var i=0;i<4;i++){
+                    arr[i].reverse();
+                    all(arr,i);
+                    for(var l=0;l<4;l++){
+                        if(arr[i][l]==0){
+                            for(var m=l+1;m<4;m++){
+                                arr3[i][3-m]+=1;
+                            }
+                        }
+                        else{
+                            for(var h=l+1;h<4;h++){
+                                if(arr[i][h]!=0){
+                                    if(arr[i][l]==arr[i][h]){
+                                        for(var q=h;q<4;q++){
+                                            arr3[i][3-q]+=1;
+                                        }
+                                    }
+                                    else{
+                                        h=3;
+                                    }
+                                }
+                                else{
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    for(var n=0;n<4;n++){
+                        var t=0;
+                        while(arr[i][n]==""&&t<=4){
+                            arr[i].splice(n,1);
+                            arr[i].splice(3,0,"");
+                            t++;
+                        }
+                    }
+                    for(var j=0;j<3;j++){
+                        if(arr[i][j]==arr[i][j+1]&&arr[i][j]!=""){
+                            arr[i].splice(j,2,2*arr[i][j]);
+                            arr2[i][3-j]=1;
+                            arr[i].splice(3,0,"");
+                            u=1;//方块移动则为1
+                        }
+                    }
+                    arr[i].reverse();
+                }
+            }
+            //移动动画
+            //随机产生2或4插入空处
+            function sj(arr) {
+                var x=0,a=0,b=0;
+                for(var i=0;i<4;i++){
+                    for(var j=0;j<4;j++){
+                        if(arr[i][j]==""){
+                            var y=Math.random();
+                            if(y>x){
+                                x=y;
+                                a=i;
+                                b=j;
+                            }
+                        }
+                    }
+                }
+                if(Math.random()<0.9){
+                    arr[a][b]=2;
+                    row[a].getElementsByTagName("p")[b].className="n_2fd";
+                }
+                else{
+                    arr[a][b]=4;
+                    row[a].getElementsByTagName("p")[b].className="n_4fd";
+                }
+            }
+            //p配色
+            function ps() {
+                for(var i=0;i<4;i++){
+                    for(var j=0;j<4;j++){
+                        var ys=sum[i][j];
+                        if(psn[i][j]==1){
+                            switch(ys){
+                                case 2 :
+                                    row[i].getElementsByTagName("p")[j].className="n_2 hfd";
+                                    break;
+                                case 4 :
+                                    row[i].getElementsByTagName("p")[j].className="n_4 hfd";
+                                    break;
+                                case 8:
+                                    row[i].getElementsByTagName("p")[j].className="n_8 hfd";
+                                    break;
+                                case 16:
+                                    row[i].getElementsByTagName("p")[j].className="n_16 hfd";
+                                    break;
+                                case 32:
+                                    row[i].getElementsByTagName("p")[j].className="n_32 hfd";
+                                    break;
+                                case 64:
+                                    row[i].getElementsByTagName("p")[j].className="n_64 hfd";
+                                    break;
+                                case 128:
+                                    row[i].getElementsByTagName("p")[j].className="n_128 hfd";
+                                    break;
+                                case 256:
+                                    row[i].getElementsByTagName("p")[j].className="n_256 hfd";
+                                    break;
+                                case 512:
+                                    row[i].getElementsByTagName("p")[j].className="n_512 hfd";
+                                    break;
+                                case 1024:
+                                    row[i].getElementsByTagName("p")[j].className="n_1024 hfd";
+                                    break;
+                                case 2048:
+                                    row[i].getElementsByTagName("p")[j].className="n_2048 hfd";
+                                    break;
+                                default:
+                                    row[i].getElementsByTagName("p")[j].className="normal";
+                                    break;
+                            }
+                        }
+                        else{
+                            switch(ys){
+                                case 2 :
+                                    row[i].getElementsByTagName("p")[j].className="n_2";
+                                    break;
+                                case 4 :
+                                    row[i].getElementsByTagName("p")[j].className="n_4";
+                                    break;
+                                case 8:
+                                    row[i].getElementsByTagName("p")[j].className="n_8";
+                                    break;
+                                case 16:
+                                    row[i].getElementsByTagName("p")[j].className="n_16";
+                                    break;
+                                case 32:
+                                    row[i].getElementsByTagName("p")[j].className="n_32";
+                                    break;
+                                case 64:
+                                    row[i].getElementsByTagName("p")[j].className="n_64";
+                                    break;
+                                case 128:
+                                    row[i].getElementsByTagName("p")[j].className="n_128";
+                                    break;
+                                case 256:
+                                    row[i].getElementsByTagName("p")[j].className="n_256";
+                                    break;
+                                case 512:
+                                    row[i].getElementsByTagName("p")[j].className="n_512";
+                                    break;
+                                case 1024:
+                                    row[i].getElementsByTagName("p")[j].className="n_1024";
+                                    break;
+                                case 2048:
+                                    row[i].getElementsByTagName("p")[j].className="n_2048";
+                                    break;
+                                default:
+                                    row[i].getElementsByTagName("p")[j].className="normal";
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+            //b配色前
+            function bps_lf(arr) {
+                for(var i=0;i<4;i++){
+                    for(var j=0;j<4;j++){
+                        var ys=arr[i][j];
+                        var ms=move[i][j];
+                        switch(ys){
+                            case 2 :
+                                row[i].getElementsByTagName("b")[j].className="n_2";
+                                break;
+                            case 4 :
+                                row[i].getElementsByTagName("b")[j].className="n_4";
+                                break;
+                            case 8:
+                                row[i].getElementsByTagName("b")[j].className="n_8";
+                                break;
+                            case 16:
+                                row[i].getElementsByTagName("b")[j].className="n_16";
+                                break;
+                            case 32:
+                                row[i].getElementsByTagName("b")[j].className="n_32";
+                                break;
+                            case 64:
+                                row[i].getElementsByTagName("b")[j].className="n_64";
+                                break;
+                            case 128:
+                                row[i].getElementsByTagName("b")[j].className="n_128";
+                                break;
+                            case 256:
+                                row[i].getElementsByTagName("b")[j].className="n_256";
+                                break;
+                            case 512:
+                                row[i].getElementsByTagName("b")[j].className="n_512";
+                                break;
+                            case 1024:
+                                row[i].getElementsByTagName("b")[j].className="n_1024";
+                                break;
+                            case 2048:
+                                row[i].getElementsByTagName("b")[j].className="n_2048";
+                                break;
+                            default:
+                                row[i].getElementsByTagName("b")[j].className="normal_b";
+                                break;
+                        }
+                        switch (ms){
+                            case 1:
+                                row[i].getElementsByTagName("b")[j].className+=" move1xl";
+                                break;
+                            case 2:
+                                row[i].getElementsByTagName("b")[j].className+=" move2xl";
+                                break;
+                            case 3:
+                                row[i].getElementsByTagName("b")[j].className+=" move3xl";
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+            function bps_rg(arr) {
+                for(var i=0;i<4;i++){
+                    for(var j=0;j<4;j++){
+                        var ys=arr[i][j];
+                        var ms=move[i][j];
+                        switch(ys){
+                            case 2 :
+                                row[i].getElementsByTagName("b")[j].className="n_2";
+                                break;
+                            case 4 :
+                                row[i].getElementsByTagName("b")[j].className="n_4";
+                                break;
+                            case 8:
+                                row[i].getElementsByTagName("b")[j].className="n_8";
+                                break;
+                            case 16:
+                                row[i].getElementsByTagName("b")[j].className="n_16";
+                                break;
+                            case 32:
+                                row[i].getElementsByTagName("b")[j].className="n_32";
+                                break;
+                            case 64:
+                                row[i].getElementsByTagName("b")[j].className="n_64";
+                                break;
+                            case 128:
+                                row[i].getElementsByTagName("b")[j].className="n_128";
+                                break;
+                            case 256:
+                                row[i].getElementsByTagName("b")[j].className="n_256";
+                                break;
+                            case 512:
+                                row[i].getElementsByTagName("b")[j].className="n_512";
+                                break;
+                            case 1024:
+                                row[i].getElementsByTagName("b")[j].className="n_1024";
+                                break;
+                            case 2048:
+                                row[i].getElementsByTagName("b")[j].className="n_2048";
+                                break;
+                            default:
+                                row[i].getElementsByTagName("b")[j].className="normal_b";
+                                break;
+                        }
+                        switch (ms){
+                            case 1:
+                                row[i].getElementsByTagName("b")[j].className+=" move1xr";
+                                break;
+                            case 2:
+                                row[i].getElementsByTagName("b")[j].className+=" move2xr";
+                                break;
+                            case 3:
+                                row[i].getElementsByTagName("b")[j].className+=" move3xr";
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+            function bps_up(arr) {
+                for(var i=0;i<4;i++){
+                    for(var j=0;j<4;j++){
+                        var ys=arr[i][j];
+                        var ms=move[i][j];
+                        switch(ys){
+                            case 2 :
+                                row[i].getElementsByTagName("b")[j].className="n_2";
+                                break;
+                            case 4 :
+                                row[i].getElementsByTagName("b")[j].className="n_4";
+                                break;
+                            case 8:
+                                row[i].getElementsByTagName("b")[j].className="n_8";
+                                break;
+                            case 16:
+                                row[i].getElementsByTagName("b")[j].className="n_16";
+                                break;
+                            case 32:
+                                row[i].getElementsByTagName("b")[j].className="n_32";
+                                break;
+                            case 64:
+                                row[i].getElementsByTagName("b")[j].className="n_64";
+                                break;
+                            case 128:
+                                row[i].getElementsByTagName("b")[j].className="n_128";
+                                break;
+                            case 256:
+                                row[i].getElementsByTagName("b")[j].className="n_256";
+                                break;
+                            case 512:
+                                row[i].getElementsByTagName("b")[j].className="n_512";
+                                break;
+                            case 1024:
+                                row[i].getElementsByTagName("b")[j].className="n_1024";
+                                break;
+                            case 2048:
+                                row[i].getElementsByTagName("b")[j].className="n_2048";
+                                break;
+                            default:
+                                row[i].getElementsByTagName("b")[j].className="normal_b";
+                                break;
+                        }
+                        switch (ms){
+                            case 1:
+                                row[i].getElementsByTagName("b")[j].className+=" move1xu";
+                                break;
+                            case 2:
+                                row[i].getElementsByTagName("b")[j].className+=" move2xu";
+                                break;
+                            case 3:
+                                row[i].getElementsByTagName("b")[j].className+=" move3xu";
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+            function bps_dw(arr) {
+                for(var i=0;i<4;i++){
+                    for(var j=0;j<4;j++){
+                        var ys=arr[i][j];
+                        var ms=move[i][j];
+                        switch(ys){
+                            case 2 :
+                                row[i].getElementsByTagName("b")[j].className="n_2";
+                                break;
+                            case 4 :
+                                row[i].getElementsByTagName("b")[j].className="n_4";
+                                break;
+                            case 8:
+                                row[i].getElementsByTagName("b")[j].className="n_8";
+                                break;
+                            case 16:
+                                row[i].getElementsByTagName("b")[j].className="n_16";
+                                break;
+                            case 32:
+                                row[i].getElementsByTagName("b")[j].className="n_32";
+                                break;
+                            case 64:
+                                row[i].getElementsByTagName("b")[j].className="n_64";
+                                break;
+                            case 128:
+                                row[i].getElementsByTagName("b")[j].className="n_128";
+                                break;
+                            case 256:
+                                row[i].getElementsByTagName("b")[j].className="n_256";
+                                break;
+                            case 512:
+                                row[i].getElementsByTagName("b")[j].className="n_512";
+                                break;
+                            case 1024:
+                                row[i].getElementsByTagName("b")[j].className="n_1024";
+                                break;
+                            case 2048:
+                                row[i].getElementsByTagName("b")[j].className="n_2048";
+                                break;
+                            default:
+                                row[i].getElementsByTagName("b")[j].className="normal_b";
+                                break;
+                        }
+                        switch (ms){
+                            case 1:
+                                row[i].getElementsByTagName("b")[j].className+=" move1xd";
+                                break;
+                            case 2:
+                                row[i].getElementsByTagName("b")[j].className+=" move2xd";
+                                break;
+                            case 3:
+                                row[i].getElementsByTagName("b")[j].className+=" move3xd";
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+            //b配色后
+            function bps_b() {
+                for(var i=0;i<4;i++){
+                    for(var j=0;j<4;j++){
+                        row[i].getElementsByTagName("b")[j].className="normal_b";
+                    }
+                }
+            }
+            //上下左右触发的动作
+            function left() {
+                u=0;
+                reset_move();
+                remove_p();
+                insert_arrb();
+                go_x(sum,psn,move);
+                bps_lf(sum_old);
+                setTimeout(ps,100);
+                u==1?sj(sum):void(0);
+                setTimeout(bps_b,200);
+                setTimeout(insert_arr,100);
+                u==0?finish(sum):void(0);
+            }
+            function right() {
+                u=0;
+                reset_move();
+                remove_p();
+                insert_arrb();
+                go_y(sum,psn,move);
+                bps_rg(sum_old);
+                setTimeout(ps,100);
+                u==1?sj(sum):void(0);
+                setTimeout(bps_b,100);
+                setTimeout(insert_arr,100);
+                u==0?finish(sum):void(0);
+            }
+            function up() {
+                u=0;
+                reset_move();
+                remove_p();
+                insert_arrb();
+                sum_cx();
+                go_x(sum_col,psn_col,move_col);
+                sum_cy();
+                bps_up(sum_old);
+                setTimeout(ps,100);
+                u==1?sj(sum):void(0);
+                setTimeout(bps_b,100);
+                setTimeout(insert_arr,100);
+                u==0?finish(sum):void(0);
+            }
+            function down() {
+                u=0;
+                reset_move();
+                remove_p();
+                insert_arrb();
+                sum_cx();
+                go_y(sum_col,psn_col,move_col);
+                sum_cy();
+                bps_dw(sum_old);
+                setTimeout(ps,100);
+                u==1?sj(sum):void(0);
+                setTimeout(bps_b,100);
+                setTimeout(insert_arr,100);
+                u==0?finish(sum):void(0);
+            }
+            document.onkeydown=function(){
+                var key_num=window.event.keyCode;
+                if(u==0&&finish(sum)){return;}
+                switch (key_num){
+                    case 37:
+                        left();
+                        break;
+                    case 38:
+                        up();
+                        break;
+                    case 39:
+                        right();
+                        break;
+                    case 40:
+                        down();
+                        break;
+                    default:
+                        break;
+                }
+            };
+        };
+
+    </script>
 </head>
 <body>
-<p>Hello World!</p>
+<div class="header">2048小游戏</div>
+<div class="box">
+    <ul>
+        <li class="normal"><b></b><p></p></li>
+        <li class="normal"><b></b><p></p></li>
+        <li class="normal"><b></b><p></p></li>
+        <li class="normal"><b></b><p></p></li>
+    </ul>
+    <ul>
+        <li class="normal"><b></b><p></p></li>
+        <li class="normal"><b></b><p></p></li>
+        <li class="normal"><b></b><p></p></li>
+        <li class="normal"><b></b><p></p></li>
+    </ul>
+    <ul>
+        <li class="normal"><b></b><p></p></li>
+        <li class="normal"><b></b><p></p></li>
+        <li class="normal"><b></b><p></p></li>
+        <li class="normal"><b></b><p></p></li>
+    </ul>
+    <ul>
+        <li class="normal"><b></b><p></p></li>
+        <li class="normal"><b></b><p></p></li>
+        <li class="normal"><b></b><p></p></li>
+        <li class="normal"><b></b><p></p></li>
+    </ul>
+    <div class="zz"></div>
+    <div class="final">
+        <div class="f_text">游戏结束</div>
+        <div class="f_bt">
+            <p id="again">再来一局</p>
+            <p id="no_play" onclick="window.open('','_self').close()">不玩了！</p>
+        </div>
+    </div>
+</div>
+<div id="obt">
+    <b id="go">开始游戏</b>
+</div>
+<div class="footer">
+    Made by <a href="tencent://message/?uin=38328145&Site=&Menu=yes">yxb</a>
+</div>
 </body>
 </html>
