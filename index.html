@@ -11,9 +11,19 @@
             font-size: 36pt;
             text-align: center;
         }
-        section{
-            height: 880px;
+        section.fix{
+            margin-top: 10px;
+            height: 300px;
             text-align: center;
+        }
+        section.move{
+            height: 480px;
+            text-align: center;
+        }
+        section.dg{
+            height: 300px;
+            text-align: center;
+            margin-bottom: 10px;
         }
         footer{
             color: #fff;
@@ -23,16 +33,35 @@
             text-align: center;
         }
     </style>
+    <script>
+        window.onload=function () {
+            function x1() {
+                document.getElementById("zp").src="img/psu.jpg";
+                setTimeout(x2,2000);
+            }
+            function x2() {
+                document.getElementById("zp").src="img/1.jpg";
+                setTimeout(x1,2000);
+            }
+            x1();
+        }
+    </script>
 </head>
 <body>
 <header>
     <b>热烈庆祝弟弟二十四岁生日快乐！</b>
 </header>
-<section>
-    <img src="img/1.jpg">
+<section class="fix">
+    <img style="height:300px;" src="img/3.jpg">
+</section>
+<section class="move">
+    <img id="zp" style="height: 450px" src="img/1.jpg">
+</section>
+<section class="dg">
+    <img style="height:300px;" src="img/dg.jpg">
 </section>
 <footer>
-    <b>你最亲爱的口十月半月半为你送上最诚挚的祝福！</b>
+    <b>你最亲爱的口十月半月半送上最诚挚的祝福！</b>
 </footer>
 </body>
 </html>
